@@ -57,11 +57,11 @@ class GameManager {
 
       // Get new questions on topic
       this.#setQuestions(this.#currentTopic);
-
-      player.resetLives();
     } else {
       this.#stage += 1;
     }
+
+    player.resetLives();
 
     this.#entries = new Set(); // Clear entries
 
@@ -79,6 +79,9 @@ class GameManager {
 
     if (!sanitizedAnswer.has(letter)) {
       player.reduceLives();
+      player.setScore(player.getScore() - 10);
+    } else {
+      player.setScore(player.getScore() + 20);
     }
   }
 
@@ -96,6 +99,14 @@ class GameManager {
 
   getEntries() {
     return this.#entries;
+  }
+
+  getLevel() {
+    return this.#level;
+  }
+
+  getCurrentTopic() {
+    return questions[this.#currentTopic].topic;
   }
 
   #setTopics() {

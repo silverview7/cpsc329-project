@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Key from "./Key";
 import "./Keyboard.css";
 
 function Keyboard({ entries, handleClick }) {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const key = e.key.toUpperCase();
+      if (/^[A-Z]$/.test(key)) {
+        handleClick(key);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [entries, handleClick]);
+
   return (
     <div className="keyboard">
-      <div>
+      <div className="keyboard-row">
         <Key
           letter={"Q"}
           handleClick={(value) => handleClick(value)}
@@ -57,7 +69,7 @@ function Keyboard({ entries, handleClick }) {
           entries={entries}
         />
       </div>
-      <div>
+      <div className="keyboard-row">
         <Key
           letter={"A"}
           handleClick={(value) => handleClick(value)}
@@ -104,7 +116,7 @@ function Keyboard({ entries, handleClick }) {
           entries={entries}
         />
       </div>
-      <div>
+      <div className="keyboard-row">
         <Key
           letter={"Z"}
           handleClick={(value) => handleClick(value)}

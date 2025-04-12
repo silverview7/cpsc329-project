@@ -14,3 +14,41 @@
   position: absolute;
   bottom: 0;
 }
+
+#player {
+  transition: transform 1.5s ease-in-out;
+}
+
+.player-success {
+  transform: translateX(200%);
+}
+
+#monster {
+  transition: left 1.5s ease-in-out;
+}
+
+.score {
+  transition: transform 0.3s ease;
+}
+
+.game-header {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.game-info {
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 5px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 8em;
+}
