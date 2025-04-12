@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import "./GameView.css";
 import Scene from "../Scene/Scene";
 import Keyboard from "../Keyboard/Keyboard";
@@ -9,10 +10,11 @@ import { RiInformation2Line } from "@remixicon/react";
 import Model from "../../ui/Model/Model";
 
 const GameView = () => {
+  const navigate = useNavigate();
   const [question, setQuestion] = useState(undefined);
   const [entries, setEntries] = useState(gameManager.getEntries());
   const [gameActive, setGameActive] = useState(gameManager.isActive());
-  const [lives, setLives] = useState(1);
+  const [lives, setLives] = useState(player.getLives()); 
   const [level, setLevel] = useState(gameManager.getLevel());
   const [hasExited, setHasExited] = useState(false);
   const [score, setScore] = useState(0);
@@ -21,8 +23,8 @@ const GameView = () => {
 
   useEffect(() => {
     gameManager.start();
-    const question = gameManager.getNextQuestion();
-    setQuestion(question);
+    const newQuestion = gameManager.getNextQuestion();
+    setQuestion(newQuestion);
 
     setLives(player.getLives());
     setCurrentTopic(gameManager.getCurrentTopic());
@@ -30,10 +32,8 @@ const GameView = () => {
   }, []);
 
   const handleClick = (letter) => {
-    // Update entries
     gameManager.attempt(letter, question.answer);
 
-    // Check if correctly guessed phrase
     if (gameManager.correctAnswer(question.answer)) {
       setTimeout(() => {
         setHasExited(true);
@@ -41,21 +41,16 @@ const GameView = () => {
 
       setTimeout(() => {
         setHasExited(false);
-        const question = gameManager.getNextQuestion();
-        setQuestion(question);
+        const newQuestion = gameManager.getNextQuestion();
+        setQuestion(newQuestion);
 
         setLives(player.getLives());
         setEntries(new Set(gameManager.getEntries()));
-
-        // Update game is active in case player lost
         setGameActive(gameManager.isActive());
       }, 2000);
     } else {
       setLives(player.getLives());
-
       setEntries(new Set(gameManager.getEntries()));
-
-      // Update game is active in case player lost
       setGameActive(gameManager.isActive());
     }
 
@@ -66,7 +61,7 @@ const GameView = () => {
 
   return (
     <div className="view">
-      {gameActive && question !== undefined && (
+      {gameActive && question !== undefined ? ( // Fix: Ensure question is defined
         <>
           <Scene
             lives={lives}
@@ -91,9 +86,10 @@ const GameView = () => {
                 </span>
               </div>
               <div>
+                <button onClick={() => navigate('/')}>Back to Menu</button> {/* Fix: Separate button */}
                 <button onClick={() => setShowAttributions(true)}>
                   <RiInformation2Line />
-                </button>
+                </button> {/* Fix: Separate button */}
               </div>
             </footer>
           </div>
@@ -122,6 +118,12 @@ const GameView = () => {
             </Model>
           )}
         </>
+      ) : (
+        <div className="container">
+          <h2>Game Over</h2>
+          <p>Your final score: {player.getScore()}</p>
+          <button onClick={() => navigate('/')}>Back to Menu</button>
+        </div>
       )}
     </div>
   );
