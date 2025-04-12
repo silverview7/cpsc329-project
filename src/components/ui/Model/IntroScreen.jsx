@@ -17,9 +17,11 @@ const IntroScreen = () => {
 
   const handleDifficultySelect = (difficulty) => {
     player.setDifficulty(difficulty);
+    player.setScore(0); // Reset score
+    player.resetLives(); // Reset lives
     gameManager.start();
     setShowDifficultyModal(false);
-    navigate('/game'); // Navigate to GameView
+    navigate('/game');
   };
 
   const handleRulesClick = () => {
@@ -57,8 +59,14 @@ const IntroScreen = () => {
       {showRulesModal && (
         <Model handleClose={() => setShowRulesModal(false)}>
           <h2>Game Rules</h2>
-          <p>Guess the word by selecting letters. You have 5 lives. Correct guesses earn 20 points, incorrect guesses deduct 10 points and cost a life. The game ends if you run out of lives or complete all levels.</p>
-          <p>Topics include: Networks, Encryption and Passwords, and Threat Modelling.</p>
+          <p>Welcome to Hangman! Here’s how to play:</p>
+            <ul>
+            <li><strong>Objective:</strong> Guess the hidden word by selecting letters.</li>
+            <li><strong>Lives:</strong> You start with 5 lives. Each incorrect guess costs 1 life.</li>
+            <li><strong>Scoring:</strong> Correct guesses earn 20 points; incorrect guesses deduct 10 points.</li>
+            <li><strong>Game End:</strong> The game ends if you run out of lives or complete all levels.</li>
+            <li><strong>Topics:</strong> Questions cover Networks, Encryption and Passwords, and Threat Modelling.</li>
+            </ul>
         </Model>
       )}
 
