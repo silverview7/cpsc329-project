@@ -154,8 +154,8 @@ class GameManager {
     };
 
     scores.push(newScore);
-
-    localStorage.setItem("scores", JSON.stringify(scores));
+    const sortedScores = scores.sort((a, b) => b.score - a.score).slice(0, 10);
+    localStorage.setItem("scores", JSON.stringify(sortedScores));
   }
 }
 
