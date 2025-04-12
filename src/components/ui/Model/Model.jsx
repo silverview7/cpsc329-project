@@ -8,10 +8,10 @@ const Model = ({ children, handleClose }) => {
       <div className="model">
         <div className="model-controls">
           <button className="closeButton" onClick={handleClose}>
-            <RiCloseLine />
+            <RiCloseLine size={40} />
           </button>
         </div>
-        <div>{children}</div>
+        <div className="content">{children}</div>
       </div>
     </div>
   );

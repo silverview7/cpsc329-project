@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import "./GameView.css";
 import Scene from "../Scene/Scene";
 import Keyboard from "../Keyboard/Keyboard";
@@ -8,18 +8,29 @@ import gameManager from "../../../utils/GameManager";
 import player from "../../../utils/Player";
 import { RiInformation2Line } from "@remixicon/react";
 import Model from "../../ui/Model/Model";
+import Bonus from "./Bonus";
 
 const GameView = () => {
   const navigate = useNavigate();
   const [question, setQuestion] = useState(undefined);
   const [entries, setEntries] = useState(gameManager.getEntries());
   const [gameActive, setGameActive] = useState(gameManager.isActive());
-  const [lives, setLives] = useState(player.getLives()); 
+  const [lives, setLives] = useState(player.getLives());
   const [level, setLevel] = useState(gameManager.getLevel());
   const [hasExited, setHasExited] = useState(false);
   const [score, setScore] = useState(0);
+  const [time, setTime] = useState(100000);
+  const [timerPaused, setTimerPaused] = useState(false);
   const [currentTopic, setCurrentTopic] = useState("");
   const [showAttributions, setShowAttributions] = useState(false);
+  const [bonusAmount, setBonusAmount] = useState(0);
+  const [showBonusAmount, setShowBonusAmount] = useState(false);
+
+  const times = {
+    Easy: 90,
+    Medium: 60,
+    Hard: 30,
+  };
 
   useEffect(() => {
     gameManager.start();
@@ -29,15 +40,62 @@ const GameView = () => {
     setLives(player.getLives());
     setCurrentTopic(gameManager.getCurrentTopic());
     setLevel(gameManager.getLevel());
+
+    setTime(times[player.getDifficulty()]);
   }, []);
+
+  useEffect(() => {
+    if (!gameActive || timerPaused) return;
+
+    if (time <= 0) {
+      gameManager.end();
+      setGameActive(gameManager.isActive());
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTime((oldTime) => oldTime - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [gameActive, timerPaused, time]);
 
   const handleClick = (letter) => {
     gameManager.attempt(letter, question.answer);
+    setEntries(new Set(gameManager.getEntries()));
 
     if (gameManager.correctAnswer(question.answer)) {
+      setTimerPaused(true);
+
+      const difficultyMapper = {
+        Easy: 1,
+        Medium: 4,
+        Hard: 10,
+      };
+
+      const timeLeft = time;
+
+      const bonus = Math.round(
+        (timeLeft / times[player.getDifficulty()]) *
+          difficultyMapper[player.getDifficulty()] *
+          100
+      );
+
+      console.log("Bonus: ", bonus);
+
+      if (bonus > 0) {
+        setShowBonusAmount(true);
+        player.setScore(player.getScore() + bonus);
+        setBonusAmount(bonus);
+
+        setTimeout(() => {
+          setShowBonusAmount(false);
+        }, 1000);
+      }
+
       setTimeout(() => {
         setHasExited(true);
-      }, 500);
+      }, 1000);
 
       setTimeout(() => {
         setHasExited(false);
@@ -45,12 +103,13 @@ const GameView = () => {
         setQuestion(newQuestion);
 
         setLives(player.getLives());
-        setEntries(new Set(gameManager.getEntries()));
         setGameActive(gameManager.isActive());
-      }, 2000);
+        setTime(times[player.getDifficulty()]);
+        setEntries(new Set());
+        setTimerPaused(false);
+      }, 2500);
     } else {
       setLives(player.getLives());
-      setEntries(new Set(gameManager.getEntries()));
       setGameActive(gameManager.isActive());
     }
 
@@ -66,7 +125,7 @@ const GameView = () => {
           <Scene
             lives={lives}
             level={level}
-            score={score}
+            time={time}
             hasExited={hasExited}
           />
           <div className="container">
@@ -86,15 +145,27 @@ const GameView = () => {
                 </span>
               </div>
               <div>
-                <button onClick={() => navigate('/')}>Back to Menu</button> {/* Fix: Separate button */}
-                <button onClick={() => setShowAttributions(true)}>
+                <button
+                  onClick={() => {
+                    setTimerPaused(true);
+                    setShowAttributions(true);
+                  }}
+                >
                   <RiInformation2Line />
-                </button> {/* Fix: Separate button */}
+                </button>
+              </div>
+              <div>
+                <span>Score: {score}</span>
               </div>
             </footer>
           </div>
           {showAttributions && (
-            <Model handleClose={() => setShowAttributions(false)}>
+            <Model
+              handleClose={() => {
+                setShowAttributions(false);
+                setTimerPaused(false);
+              }}
+            >
               <h2>Attributions</h2>
               <ol>
                 <li>
@@ -113,18 +184,27 @@ const GameView = () => {
                     Source
                   </a>
                 </li>
+                <li>
+                  Clock in game instructions (Creative Commons License) -{" "}
+                  <a href="https://cdn.iconscout.com/icon/free/png-256/free-clock-icon-download-in-svg-png-gif-file-formats--watch-timer-time-event-iconhub-pack-miscellaneous-icons-1093493.png">
+                    Source
+                  </a>
+                </li>
                 <li>Game wallpaper was AI generated</li>
               </ol>
+              <button onClick={() => navigate("/")}>Back to Menu</button>{" "}
+              {/* Moved back to main menu here */}
             </Model>
           )}
         </>
       ) : (
-        <div className="container">
-          <h2>Game Over</h2>
+        <Model>
+          <h1>Game Over</h1>
           <p>Your final score: {player.getScore()}</p>
-          <button onClick={() => navigate('/')}>Back to Menu</button>
-        </div>
+          <button onClick={() => navigate("/")}>Back to Menu</button>
+        </Model>
       )}
+      <Bonus amount={bonusAmount} show={showBonusAmount} />
     </div>
   );
 };

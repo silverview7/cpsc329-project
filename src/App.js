@@ -1,7 +1,7 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
-import IntroScreen from './components/ui/IntroScreen';
-import GameView from './components/game/GameView/GameView';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+import IntroScreen from "./components/ui/IntroScreen/IntroScreen";
+import GameView from "./components/game/GameView/GameView";
 
 function App() {
   return (

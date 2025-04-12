@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { RiHeart3Fill } from "@remixicon/react";
 import "./Scene.css";
 
-function Scene({ level, lives, score, hasExited }) {
+function Scene({ level, lives, time, hasExited }) {
   const [sceneWidth, setSceneWidth] = useState(null);
   const PLAYER_WIDTH = 110;
 
@@ -64,10 +64,8 @@ function Scene({ level, lives, score, hasExited }) {
         </div>
         <div className="game-info">
           <span>
-            Score:{" "}
-            <span className={`score ${hasExited ? "change" : ""}`}>
-              {score}
-            </span>
+            Time:{" "}
+            <span className={`score ${hasExited ? "change" : ""}`}>{time}</span>
           </span>
         </div>
         <div className="game-info">{hearts}</div>
