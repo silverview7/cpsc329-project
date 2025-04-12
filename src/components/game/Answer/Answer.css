@@ -1,0 +1,27 @@
+.answer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  /* margin-top: 100px; */
+}
+
+.word {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 8px;
+  /* margin-top: 100px; */
+}
+
+.slot {
+  width: 30px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 5px;
+  border-bottom: 3px solid black;
+  font-size: 24px;
+  font-weight: bold;
+}

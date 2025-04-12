@@ -1,0 +1,32 @@
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.keyboard-key {
+  background-color: #ffff36;
+  color: #000000;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.keyboard-key:hover {
+  cursor: pointer;
+  background-color: #f9f994;
+}
+
+.keyboard-key.disabled {
+  background-color: #868686;
+}
+
+.keyboard-key.disabled:hover {
+  cursor: default;
+}

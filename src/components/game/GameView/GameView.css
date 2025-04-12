@@ -1,0 +1,11 @@
+.view {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(112, 79, 64);
+}
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 150px;
+}

@@ -1,9 +1,12 @@
+import gameManager from "./GameManager";
+
 let instance;
 
 class Player {
   #name;
   #score;
   #difficulty;
+  #lives;
 
   constructor() {
     if (instance) {
@@ -12,6 +15,7 @@ class Player {
     instance = this;
 
     this.#score = 0;
+    this.#lives = 5;
   }
 
   getInstance() {
@@ -26,23 +30,36 @@ class Player {
     this.#score = score;
   }
 
+  resetLives() {
+    this.#lives = 5;
+  }
+
+  reduceLives() {
+    if (this.#lives - 1 === 0) {
+      return gameManager.end();
+    }
+
+    this.#lives -= 1;
+  }
+
   setDifficulty(difficulty) {
     this.#difficulty = difficulty;
   }
 
-  saveScore() {
-    let scores = localStorage.getItem("scores") || [];
-    let newScore;
+  getName() {
+    return this.#name;
+  }
 
-    newScore = {
-      name: this.#name,
-      score: this.#score,
-      difficulty: this.#difficulty,
-    };
+  getScore() {
+    return this.#score;
+  }
 
-    scores.push(newScore);
+  getLives() {
+    return this.#lives;
+  }
 
-    localStorage.setItem("scores", JSON.stringify(scores));
+  getDifficulty() {
+    return this.#difficulty;
   }
 }
 
