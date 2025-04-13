@@ -43,11 +43,11 @@ class GameManager {
   }
 
   getNextQuestion() {
-    if (this.#level === 2 && this.#stage === 2) {
+    if (this.#level === 3 && this.#stage === 3) {
       return this.end();
     }
 
-    if (this.#stage === 2) {
+    if (this.#stage === 3) {
       this.#level += 1;
       this.#stage = 1;
 
@@ -83,6 +83,10 @@ class GameManager {
     } else {
       player.setScore(player.getScore() + 20);
     }
+  }
+
+  clearEntries() {
+    this.#entries = new Set();
   }
 
   correctAnswer(answer) {

@@ -33,7 +33,18 @@ const GameView = () => {
   };
 
   useEffect(() => {
+    if (
+      player.getDifficulty() !== "Easy" &&
+      player.getDifficulty() !== "Medium" &&
+      player.getDifficulty() !== "Hard"
+    ) {
+      navigate("/");
+    }
+
     gameManager.start();
+
+    gameManager.clearEntries();
+    setEntries(new Set());
     const newQuestion = gameManager.getNextQuestion();
     setQuestion(newQuestion);
 
@@ -198,10 +209,16 @@ const GameView = () => {
           )}
         </>
       ) : (
-        <Model>
+        <Model
+          handleClose={() => {
+            navigate("/");
+          }}
+        >
           <h1>Game Over</h1>
           <p>Your final score: {player.getScore()}</p>
-          <button onClick={() => navigate("/")}>Back to Menu</button>
+          <button className="intro-button" onClick={() => navigate("/")}>
+            Back to Menu
+          </button>
         </Model>
       )}
       <Bonus amount={bonusAmount} show={showBonusAmount} />

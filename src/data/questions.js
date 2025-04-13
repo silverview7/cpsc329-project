@@ -25,13 +25,12 @@ const questions = [
       },
       {
         question: "How is a VPN useful for privacy?",
-        answer:
-          "Hides the direction of traffic from outsiders; connections are already encrypted",
+        answer: "Hides traffic from outsiders",
       },
       {
         question:
           "Traditional firewalls allow packets to be filtered based on ___ or ____ IP",
-        answer: "source, destination",
+        answer: "source destination",
       },
       {
         question:
